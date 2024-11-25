@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProWalks.Data;
+using ProWalks.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,11 +18,37 @@ builder.Services.AddDbContext<ProWalksDbContext>(options =>
         sqlOptions => sqlOptions.CommandTimeout(180));
 });
 
+
+//1 st point class instances we can handle over here.
+
+// IBook _book = new Book();
+
+//2. Matter is that weahter we have to use singleton , scoped , transient while you are register the class(create the instance)
+
+builder.Services.AddScoped<IRegionRepository,RegionRepository>();  // instance of the Regionreposioty
+
+
+builder.Services.AddCors(options =>
+{
+    //AllowAllOrigins
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
+
+
+
+//to create the instance of the class challenge the task.
+//
+
+// Library
+// 
+
+
+
+
 var app = builder.Build();
-
-
-
-
 
 
 // Configure the HTTP request pipeline.
@@ -31,6 +58,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowAllOrigins");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
