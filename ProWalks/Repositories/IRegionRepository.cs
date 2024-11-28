@@ -6,5 +6,7 @@ namespace ProWalks.Repositories
     {
        public Task<List<Region>> GetAllRegions();
 
+        public Task<Region> GetAllRegionsByID(string code);
+
     }
 }

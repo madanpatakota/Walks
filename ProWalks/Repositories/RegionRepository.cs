@@ -16,13 +16,16 @@ namespace ProWalks.Repositories
            return  await this._prowalksDbContext.Regions.ToListAsync();
         }
 
+        public async Task<Region> GetAllRegionsByID(string code)
+        {
+            return await this._prowalksDbContext.Regions.Where(x => x.Code == code).SingleOrDefaultAsync();
+        }
 
 
+        //func delegate where select max min 
 
-        //public List<Region> GetAllRegions1()
-        //{
-        //    return  this._prowalksDbContext.Regions.ToList();
-        //}
+        // [1 , 2, 3, 4, 5 ,6 , 7 ] --> > [5,6,7]
+        
 
     }
 }
