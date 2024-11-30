@@ -110,6 +110,7 @@ namespace ProWalks.Controllers
         [HttpPost] //postman
         [Route("CreateRegion")]
 
+        
         //https://localhost:7148/Regions/CreateRegion
         //https://localhost:7148/Regions/CreateRegion
 
@@ -117,15 +118,26 @@ namespace ProWalks.Controllers
         {
             //await _________________
             return Ok("Good");
-       
-            // i will prepare the logic for insert the record.
 
-        
-        
+            // i will prepare the logic for insert the record.
         }
 
 
+        //keerthi
 
+        //Name in the passport  - keerthy   -- Keerthi based on which parameter we can update?
+
+        // If you go the Mee seva Aadhar office offier i need the update the my name ... can you help on that 
+
+        // Next reply from the officer -- AAdhar no  , passport no?
+
+
+        // you can develp the update method ( PrimaryKey , what value you want to update )
+
+
+        // you can develp the delete method ( PrimaryKey )
+
+        ////CRUD
 
 
     }
