@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols.Configuration;
 using ProWalks.DomainModels;
 using ProWalks.DTOs;
 using ProWalks.Repositories;
@@ -58,12 +59,10 @@ namespace ProWalks.Controllers
         [Route("GetAllRegionsID/{code}")]
         public async Task<IActionResult> GetAllRegionsID([FromRoute] string code)
         {
-          
-
             try
             {
-               var region = await _regionRepository.GetAllRegionsByID(code); // 2 records  //AP
-               var regionDto = new RegionDTO();
+                var region = await _regionRepository.GetAllRegionsByID(code); // 2 records  //AP
+                var regionDto = new RegionDTO();
 
                 regionDto.Id = region.Id;
                 regionDto.Code = region.Code;
@@ -78,23 +77,55 @@ namespace ProWalks.Controllers
             {
                 return BadRequest("Record is not available. Please enter another record.");
             }
-
-
-           
-
-           
         }
 
+        // 1. Input params
+        // 2. return type
 
 
-        //https://localhost:7148/Regions/CreateRegions
-        [HttpPost]
-        [Route("CreateRegions")]
-        public async Task<IActionResult> CreateRegions([FromBody] AddRegtionDTO addRegtionDTO)
+        //Sync
+        //public int getid(string gname)
+        //{
+        //    return 1;
+        //}
+
+
+        //public async Task<int> getid(string name)
+        //{
+        //    await _______________________________;
+
+        //    ///
+
+        //    ///
+        //    return 1;
+        //}
+
+
+        //public async Task<IActionResult> CreateRegionMethod(string code , string lat , string long , string area , string population)
+
+        //API part
+        //[HttpGet]
+        //[Route("GetAllRegionsID/{code}")]
+
+        [HttpPost] //postman
+        [Route("CreateRegion")]
+
+        //https://localhost:7148/Regions/CreateRegion
+        //https://localhost:7148/Regions/CreateRegion
+
+        public async Task<IActionResult> CreateRegionMethod([FromBody] AddRegtionDTO addRegtionDTO)
         {
+            //await _________________
             return Ok("Good");
-        }
        
+            // i will prepare the logic for insert the record.
+
+        
+        
+        }
+
+
+
 
 
     }
