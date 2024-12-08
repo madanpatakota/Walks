@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Protocols.Configuration;
+using ProWalks.Data;
 using ProWalks.DomainModels;
 using ProWalks.DTOs;
 using ProWalks.Repositories;
@@ -12,18 +14,20 @@ namespace ProWalks.Controllers
     public class RegionsController : ControllerBase
     {
         IRegionRepository _regionRepository;
-
+        ProWalksDbContext proWalksDbContext;
 
         //Deep logic  (instance of the Regionreposioty)
-        public RegionsController(IRegionRepository regionRepository)
+        public RegionsController(IRegionRepository regionRepository, ProWalksDbContext dbContext)
         {
             _regionRepository = regionRepository;
+            this.proWalksDbContext = dbContext;
         }
 
 
         //Get the Result data from the Async call.
         //https://localhost:7148/Regions/GetAllRegions
         [HttpGet]
+        [Authorize]
         [Route("GetAllRegions")]
         public async Task<IActionResult> GetAllRegions()
         {
@@ -110,14 +114,36 @@ namespace ProWalks.Controllers
         [HttpPost] //postman
         [Route("CreateRegion")]
 
-        
+
         //https://localhost:7148/Regions/CreateRegion
         //https://localhost:7148/Regions/CreateRegion
 
         public async Task<IActionResult> CreateRegionMethod([FromBody] AddRegtionDTO addRegtionDTO)
         {
+
+            var region = new Region
+            {
+                Code = addRegtionDTO.Code,
+                Name = addRegtionDTO.Name,
+                Lat = addRegtionDTO.Lat,
+                Long = addRegtionDTO.Long,
+                Area = addRegtionDTO.Area,
+                population = addRegtionDTO.population
+            };
+
+            await _regionRepository.CreateRegion(region);
+
+            var RegionDto = new RegionDTO
+            {
+                Id = region.Id,
+                Code = region.Code,
+                Name = region.Name
+            };
+
+            return Ok(RegionDto);
+
             //await _________________
-            return Ok("Good");
+            //return Ok("Good");
 
             // i will prepare the logic for insert the record.
         }
@@ -138,6 +164,111 @@ namespace ProWalks.Controllers
         // you can develp the delete method ( PrimaryKey )
 
         ////CRUD
+        
+
+
+
+
+        
+        /// <summary>
+        /// Update record
+        /// </summary>
+        /// <param name="regionID"></param>
+        /// <param name="newUpdateRegtionDTO"></param>
+        /// <returns></returns>
+        [HttpPut] //postman
+        [Route("UpdateRegion/{regionID:Guid}")]
+
+        //6234********************  , /// updating   //siva , tamilnadu 
+        public async Task<IActionResult> UpdateRegionMethod([FromRoute] Guid regionID,  [FromBody] AddRegtionDTO newUpdateRegtionDTO)
+        {
+
+            //Instagram update image
+
+
+            //1. input parameter should contain the id
+            //2. you have to get the update record from the angular
+            //3. find the exisiting record with the id and then replace the record with the update record
+
+
+            //Find the record based on the id then i will connect with reposioty method.
+            var regionDetails = await proWalksDbContext.Regions.FindAsync(regionID); 
+
+            // your details 
+            // var xyz =  //aadhardatabase.tamilnadudetails(787234********************);  //shiiiva
+
+            //what kind of details regionDetails contains?
+
+            if (regionDetails == null)
+            {
+                return NotFound();
+            }
+
+            regionDetails.Code       = newUpdateRegtionDTO.Code;
+            regionDetails.population = newUpdateRegtionDTO.population;
+            regionDetails.Area       = newUpdateRegtionDTO.Area;
+            regionDetails.Lat = newUpdateRegtionDTO.Lat;
+            regionDetails.Long = newUpdateRegtionDTO.Long;
+            regionDetails.Name = newUpdateRegtionDTO.Name;
+
+
+            Region region = await _regionRepository.UpdateRegion(regionID, regionDetails);
+
+            var RegionDto = new RegionDTO
+            {
+                Id = region.Id,
+                Code = region.Code,
+                Name = region.Name
+            };
+
+            return Ok(RegionDto);
+        }
+
+
+
+
+        /// <summary>
+        /// Delete the record
+        /// </summary>
+        /// <param name="regionID"></param>
+        /// <param name="newUpdateRegtionDTO"></param>
+        /// <returns></returns>
+        [HttpDelete] //postman
+        [Route("DeleteRegion/{regionID:Guid}")]
+
+        //6234********************  , /// updating   //siva , tamilnadu 
+        public async Task<IActionResult> DeleteRegion([FromRoute] Guid regionID)
+        {
+
+            
+
+            //Find the record based on the id then i will connect with reposioty method.
+            var regionDetails = await proWalksDbContext.Regions.FindAsync(regionID);
+
+            // your details 
+            // var xyz =  //aadhardatabase.tamilnadudetails(787234********************);  //shiiiva
+
+            //what kind of details regionDetails contains?
+
+            if (regionDetails == null)
+            {
+                return NotFound();
+            }
+
+            Region region = await _regionRepository.DeleteRegion(regionDetails);
+
+            var RegionDto = new RegionDTO
+            {
+                Id = region.Id,
+                Code = region.Code,
+                Name = region.Name
+            };
+
+            return Ok(RegionDto);
+        }
+
+
+
 
 
     }
